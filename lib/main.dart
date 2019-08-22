@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animation_workshop/image_data.dart';
+import 'package:flutter_animation_workshop/zoom.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,8 +56,8 @@ class _MyHomePageState extends State<MyHomePage> {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView(children: [
               const SizedBox(height: 24),
-              ...snapshot.data
-                  .map((ImageData data) => ImageBox(filename: data.filename)),
+              ...snapshot.data.map((ImageData data) =>
+                  ImageBox(key: ValueKey(data.filename), imageData: data)),
               const SizedBox(height: 24),
             ]);
           } else {
@@ -69,9 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class ImageBox extends StatefulWidget {
-  final String filename;
+  final ImageData imageData;
 
-  const ImageBox({Key key, @required this.filename}) : super(key: key);
+  const ImageBox({Key key, @required this.imageData}) : super(key: key);
 
   @override
   _ImageBoxState createState() => _ImageBoxState();
@@ -86,11 +87,19 @@ class _ImageBoxState extends State<ImageBox> {
       height: 120,
       child: Stack(
         children: [
-          Card(
-            clipBehavior: Clip.hardEdge,
-            child: OverflowBox(
-              maxHeight: double.maxFinite,
-              child: Image.asset('assets/images/${widget.filename}'),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext _) => Zoom(imageData: widget.imageData),
+              ));
+            },
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              child: OverflowBox(
+                maxHeight: double.maxFinite,
+                child:
+                    Image.asset('assets/images/${widget.imageData.filename}'),
+              ),
             ),
           ),
           Positioned(
@@ -98,6 +107,7 @@ class _ImageBoxState extends State<ImageBox> {
             bottom: 0,
             left: 24,
             child: FloatingActionButton(
+              heroTag: null,
               backgroundColor: starred ? Colors.white30 : Colors.white10,
               child: Icon(starred ? Icons.star : Icons.star_border,
                   color: Colors.white, size: 48),
