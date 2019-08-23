@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animation_workshop/image_data.dart';
@@ -55,12 +56,15 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _images,
         builder: (BuildContext _, AsyncSnapshot<List<ImageData>> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return ListView(children: [
-              const SizedBox(height: 24),
-              ...snapshot.data.map((ImageData data) =>
-                  ImageBox(key: ValueKey(data.filename), imageData: data)),
-              const SizedBox(height: 24),
-            ]);
+            return ListView(
+              children: [
+                const SizedBox(height: 24),
+                ...snapshot.data.map(
+                  (ImageData data) => ImageBox(imageData: data),
+                ),
+                const SizedBox(height: 24),
+              ],
+            );
           } else {
             return const Center(child: CircularProgressIndicator());
           }
@@ -70,31 +74,65 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class ImageBox extends StatelessWidget {
+class ImageBox extends StatefulWidget {
   final ImageData imageData;
 
   const ImageBox({Key key, @required this.imageData}) : super(key: key);
+
+  @override
+  _ImageBoxState createState() => _ImageBoxState();
+}
+
+class _ImageBoxState extends State<ImageBox> {
+  bool starred = false;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 120,
-      child: Stack(children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext _) => Zoom(imageData: imageData),
-            ));
-          },
-          child: Card(
-            clipBehavior: Clip.hardEdge,
-            child: OverflowBox(
-              maxHeight: double.maxFinite,
-              child: Image.asset('assets/images/${imageData.filename}'),
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext _) => Zoom(
+                  imageData: widget.imageData,
+                  starred: starred,
+                ),
+              ));
+            },
+            child: Card(
+              clipBehavior: Clip.hardEdge,
+              child: OverflowBox(
+                maxHeight: double.maxFinite,
+                child:
+                    ShaderMask(
+                      shaderCallback: (Rect bounds) =>
+                        RadialGradient(
+                          center: Alignment.center,
+                          radius: starred ? 10 : 0,
+                          colors: <Color>[Colors.grey, Colors.transparent],
+                          tileMode: TileMode.mirror,
+                        ).createShader(bounds),
+                      child: Image.asset('assets/images/${widget.imageData.filename}')),
+              ),
             ),
           ),
-        ),
-        Positioned(top: 0, bottom: 0, left: 24, child: StarFab()),
-      ]),
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 24,
+            child: StarFab(
+              starred,
+              onPressed: () {
+                setState(() {
+                  starred = !starred;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

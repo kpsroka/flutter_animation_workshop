@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 
-class StarFab extends StatefulWidget {
-  const StarFab({Key key}) : super(key: key);
+class StarFab extends StatelessWidget {
+  final bool value;
+  final VoidCallback onPressed;
 
-  @override
-  _StarFabState createState() => _StarFabState();
-}
-
-class _StarFabState extends State<StarFab> {
-  bool starred = false;
+  const StarFab(this.value, {Key key, this.onPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
       heroTag: null,
-      backgroundColor: starred ? Colors.yellow.withAlpha(191) : Colors.white.withAlpha(127),
+      backgroundColor:
+          value ? Colors.yellow.withAlpha(191) : Colors.white.withAlpha(127),
       onPressed: () {
-        setState(() {
-          starred = !starred;
-        });
+        if (onPressed != null) onPressed();
       },
       child: Icon(
-        starred ? Icons.star : Icons.star_border,
+        value ? Icons.star : Icons.star_border,
         size: 48,
         color: Colors.white,
       ),

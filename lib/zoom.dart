@@ -5,8 +5,10 @@ import 'image_data.dart';
 
 class Zoom extends StatelessWidget {
   final ImageData imageData;
+  final bool starred;
 
-  const Zoom({Key key, @required this.imageData}) : super(key: key);
+  const Zoom({Key key, @required this.imageData, @required this.starred})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class Zoom extends StatelessWidget {
             bottom: 24,
             left: 0,
             right: 0,
-            child: Center(child: StarFab()),
+            child: Center(child: StarFab(starred)),
           ),
         ],
       ),
