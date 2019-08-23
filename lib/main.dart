@@ -103,19 +103,8 @@ class _ImageBoxState extends State<ImageBox> {
             },
             child: Card(
               clipBehavior: Clip.hardEdge,
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) => RadialGradient(
-                  radius: starred ? 0 : 1000,
-                  center: Alignment.centerLeft,
-                  colors: <Color>[Colors.grey.shade700, Colors.white],
-                  tileMode: TileMode.clamp,
-                ).createShader(bounds),
-                child: OverflowBox(
-                  maxHeight: double.maxFinite,
-                  child:
-                      Image.asset('assets/images/${widget.imageData.filename}'),
-                ),
-              ),
+              child: ImageCardContent(
+                  starred: starred, filename: widget.imageData.filename),
             ),
           ),
           Positioned(
@@ -132,6 +121,31 @@ class _ImageBoxState extends State<ImageBox> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ImageCardContent extends StatelessWidget {
+  final bool starred;
+  final String filename;
+
+  const ImageCardContent({Key key, this.starred, this.filename})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return ShaderMask(
+      shaderCallback: (Rect bounds) => RadialGradient(
+        radius: starred ? 0 : 1000,
+        center: Alignment.centerLeft,
+        colors: <Color>[Colors.grey.shade700, Colors.white],
+        tileMode: TileMode.clamp,
+      ).createShader(bounds),
+      child: OverflowBox(
+        maxHeight: double.maxFinite,
+        child: Image.asset('assets/images/$filename'),
       ),
     );
   }
