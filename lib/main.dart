@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animation_workshop/image_data.dart';
+import 'package:flutter_animation_workshop/star_fab.dart';
 import 'package:flutter_animation_workshop/zoom.dart';
 
 void main() => runApp(MyApp());
@@ -69,57 +70,31 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class ImageBox extends StatefulWidget {
+class ImageBox extends StatelessWidget {
   final ImageData imageData;
 
   const ImageBox({Key key, @required this.imageData}) : super(key: key);
-
-  @override
-  _ImageBoxState createState() => _ImageBoxState();
-}
-
-class _ImageBoxState extends State<ImageBox> {
-  bool starred = false;
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 120,
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext _) => Zoom(imageData: widget.imageData),
-              ));
-            },
-            child: Card(
-              clipBehavior: Clip.hardEdge,
-              child: OverflowBox(
-                maxHeight: double.maxFinite,
-                child:
-                    Image.asset('assets/images/${widget.imageData.filename}'),
-              ),
+      child: Stack(children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext _) => Zoom(imageData: imageData),
+            ));
+          },
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            child: OverflowBox(
+              maxHeight: double.maxFinite,
+              child: Image.asset('assets/images/${imageData.filename}'),
             ),
           ),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 24,
-            child: FloatingActionButton(
-              heroTag: null,
-              backgroundColor: starred ? Colors.white30 : Colors.white10,
-              child: Icon(starred ? Icons.star : Icons.star_border,
-                  color: Colors.white, size: 48),
-              onPressed: () {
-                setState(() {
-                  starred = !starred;
-                });
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+        Positioned(top: 0, bottom: 0, left: 24, child: StarFab()),
+      ]),
     );
   }
 }
