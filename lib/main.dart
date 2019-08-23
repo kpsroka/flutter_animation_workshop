@@ -103,18 +103,18 @@ class _ImageBoxState extends State<ImageBox> {
             },
             child: Card(
               clipBehavior: Clip.hardEdge,
-              child: OverflowBox(
-                maxHeight: double.maxFinite,
-                child:
-                    ShaderMask(
-                      shaderCallback: (Rect bounds) =>
-                        RadialGradient(
-                          center: Alignment.center,
-                          radius: starred ? 10 : 0,
-                          colors: <Color>[Colors.grey, Colors.transparent],
-                          tileMode: TileMode.mirror,
-                        ).createShader(bounds),
-                      child: Image.asset('assets/images/${widget.imageData.filename}')),
+              child: ShaderMask(
+                shaderCallback: (Rect bounds) =>
+                      RadialGradient(
+                        radius: starred ? 0 : 1000,
+                        center: Alignment.centerLeft,
+                        colors: <Color>[Colors.grey, Colors.white],
+                        tileMode: TileMode.clamp,
+                      ).createShader(bounds),
+                child: OverflowBox(
+                  maxHeight: double.maxFinite,
+                  child: Image.asset('assets/images/${widget.imageData.filename}'),
+                ),
               ),
             ),
           ),
