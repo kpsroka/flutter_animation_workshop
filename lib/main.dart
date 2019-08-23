@@ -58,11 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView(
               children: [
-                const SizedBox(height: 24),
                 ...snapshot.data.map(
                   (ImageData data) => ImageBox(imageData: data),
                 ),
-                const SizedBox(height: 24),
               ],
             );
           } else {
@@ -135,7 +133,6 @@ class ImageCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return ShaderMask(
       shaderCallback: (Rect bounds) => RadialGradient(
         radius: starred ? 0 : 1000,
