@@ -81,45 +81,50 @@ class ImageBox extends StatefulWidget {
   _ImageBoxState createState() => _ImageBoxState();
 }
 
-class _ImageBoxState extends State<ImageBox> {
+class _ImageBoxState extends State<ImageBox>
+    with SingleTickerProviderStateMixin {
   bool starred = false;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 120,
-      child: Stack(
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext _) => Zoom(
-                  imageData: widget.imageData,
-                  starred: starred,
-                ),
-              ));
-            },
-            child: Card(
-              clipBehavior: Clip.hardEdge,
-              child: ImageCardContent(
-                  starred: starred, filename: widget.imageData.filename),
-            ),
-          ),
-          Positioned(
-            top: 0,
-            bottom: 0,
-            left: 24,
-            child: StarFab(
-              starred,
-              onPressed: () {
-                setState(() {
-                  starred = !starred;
-                });
+    return AnimatedSize(
+      duration: Duration(seconds: 1),
+      child: SizedBox(
+        height: starred ? 240 : 120,
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext _) => Zoom(
+                    imageData: widget.imageData,
+                    starred: starred,
+                  ),
+                ));
               },
+              child: Card(
+                clipBehavior: Clip.hardEdge,
+                child: ImageCardContent(
+                    starred: starred, filename: widget.imageData.filename),
+              ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 24,
+              child: StarFab(
+                starred,
+                onPressed: () {
+                  setState(() {
+                    starred = !starred;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
+      vsync: this,
     );
   }
 }
