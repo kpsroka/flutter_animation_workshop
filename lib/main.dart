@@ -81,8 +81,27 @@ class ImageBox extends StatefulWidget {
   _ImageBoxState createState() => _ImageBoxState();
 }
 
-class _ImageBoxState extends State<ImageBox> {
+class _ImageBoxState extends State<ImageBox>
+    with SingleTickerProviderStateMixin {
   bool starred = false;
+  AnimationController controller;
+  Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 3),
+        lowerBound: 0,
+        upperBound: 2);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,13 +128,21 @@ class _ImageBoxState extends State<ImageBox> {
             top: 0,
             bottom: 0,
             left: 24,
-            child: StarFab(
-              starred,
-              onPressed: () {
-                setState(() {
-                  starred = !starred;
-                });
-              },
+            child: RotationTransition(
+              turns: controller,
+              child: StarFab(
+                starred,
+                onPressed: () {
+                  setState(() {
+                    if (starred) {
+                      controller.forward();
+                    } else {
+                      controller.reverse();
+                    }
+                    starred = !starred;
+                  });
+                },
+              ),
             ),
           ),
         ],
