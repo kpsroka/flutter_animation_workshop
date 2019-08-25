@@ -85,7 +85,7 @@ class _ImageBoxState extends State<ImageBox>
     with SingleTickerProviderStateMixin {
   bool starred = false;
   AnimationController controller;
-  Animation<double> animation;
+  CurvedAnimation curvedController;
 
   @override
   void initState() {
@@ -94,7 +94,9 @@ class _ImageBoxState extends State<ImageBox>
         vsync: this,
         duration: Duration(seconds: 3),
         lowerBound: 0,
-        upperBound: 2);
+        upperBound: 1);
+    curvedController =
+        CurvedAnimation(curve: Curves.easeInOutExpo, parent: controller);
   }
 
   @override
@@ -129,17 +131,17 @@ class _ImageBoxState extends State<ImageBox>
             bottom: 0,
             left: 24,
             child: RotationTransition(
-              turns: controller,
+              turns: curvedController,
               child: StarFab(
                 starred,
                 onPressed: () {
                   setState(() {
+                    starred = !starred;
                     if (starred) {
                       controller.forward();
                     } else {
                       controller.reverse();
                     }
-                    starred = !starred;
                   });
                 },
               ),
