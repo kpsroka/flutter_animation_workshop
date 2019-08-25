@@ -143,7 +143,9 @@ class ImageCardContent extends StatelessWidget {
       ).createShader(bounds),
       child: OverflowBox(
         maxHeight: double.maxFinite,
-        child: Image.asset('assets/images/$filename'),
+        child: Hero(
+          tag: filename,
+          child: Image.asset('assets/images/$filename'),),
       ),
     );
   }

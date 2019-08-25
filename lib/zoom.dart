@@ -20,7 +20,12 @@ class Zoom extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Center(child: Image.asset('assets/images/${imageData.filename}')),
+          Center(
+            child: Hero(
+              tag: imageData.filename,
+              child: Image.asset('assets/images/${imageData.filename}'),
+            ),
+          ),
           Positioned(
             bottom: 24,
             left: 0,
