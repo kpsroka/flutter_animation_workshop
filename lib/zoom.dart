@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_workshop/hero_rect_tween.dart';
 import 'package:flutter_animation_workshop/star_fab.dart';
 
+import 'image_card.dart';
 import 'image_data.dart';
 
 class Zoom extends StatelessWidget {
@@ -22,8 +24,10 @@ class Zoom extends StatelessWidget {
         children: [
           Center(
             child: Hero(
+              createRectTween: (Rect start, Rect end) =>
+                  HeroRectTween(start, end),
               tag: imageData.filename,
-              child: Image.asset('assets/images/${imageData.filename}'),
+              child: ImageCard(filename: imageData.filename, starred: starred),
             ),
           ),
           Positioned(

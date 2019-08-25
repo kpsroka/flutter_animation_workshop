@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animation_workshop/hero_rect_tween.dart';
 import 'package:flutter_animation_workshop/image_data.dart';
 import 'package:flutter_animation_workshop/star_fab.dart';
 import 'package:flutter_animation_workshop/zoom.dart';
+
+import 'image_card.dart';
 
 void main() => runApp(MyApp());
 
@@ -99,10 +102,14 @@ class _ImageBoxState extends State<ImageBox> {
                 ),
               ));
             },
-            child: Card(
-              clipBehavior: Clip.hardEdge,
-              child: ImageCardContent(
-                  starred: starred, filename: widget.imageData.filename),
+            child: Hero(
+              createRectTween: (Rect start, Rect end) =>
+                  HeroRectTween(start, end),
+              tag: widget.imageData.filename,
+              child: ImageCard(
+                starred: starred,
+                filename: widget.imageData.filename,
+              ),
             ),
           ),
           Positioned(
@@ -120,32 +127,6 @@ class _ImageBoxState extends State<ImageBox> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ImageCardContent extends StatelessWidget {
-  final bool starred;
-  final String filename;
-
-  const ImageCardContent({Key key, this.starred, this.filename})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderMask(
-      shaderCallback: (Rect bounds) => RadialGradient(
-        radius: starred ? 0 : 1000,
-        center: Alignment.centerLeft,
-        colors: <Color>[Colors.grey.shade700, Colors.white],
-        tileMode: TileMode.clamp,
-      ).createShader(bounds),
-      child: OverflowBox(
-        maxHeight: double.maxFinite,
-        child: Hero(
-          tag: filename,
-          child: Image.asset('assets/images/$filename'),),
       ),
     );
   }
