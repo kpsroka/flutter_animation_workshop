@@ -25,7 +25,7 @@ class Zoom extends StatelessWidget {
             bottom: 24,
             left: 0,
             right: 0,
-            child: Center(child: StarFab(starred)),
+            child: Center(child: StarFab(starred, heroTag: imageData.title)),
           ),
         ],
       ),

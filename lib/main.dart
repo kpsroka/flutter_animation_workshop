@@ -111,6 +111,7 @@ class _ImageBoxState extends State<ImageBox> {
             left: 24,
             child: StarFab(
               starred,
+              heroTag: widget.imageData.title,
               onPressed: () {
                 setState(() {
                   starred = !starred;
