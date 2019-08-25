@@ -103,6 +103,7 @@ class _ImageBoxState extends State<ImageBox>
                 ));
               },
               child: Card(
+                elevation: 5,
                 clipBehavior: Clip.hardEdge,
                 child: ImageCardContent(
                     starred: starred, filename: widget.imageData.filename),
@@ -112,13 +113,29 @@ class _ImageBoxState extends State<ImageBox>
               top: 0,
               bottom: 0,
               left: 24,
-              child: StarFab(
-                starred,
-                onPressed: () {
-                  setState(() {
-                    starred = !starred;
-                  });
-                },
+              child: Center(
+                child: AnimatedCrossFade(
+                  crossFadeState: starred
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
+                  firstChild: StarFab(
+                    true,
+                    onPressed: () {
+                      setState(() {
+                        starred = !starred;
+                      });
+                    },
+                  ),
+                  secondChild: StarFab(
+                    false,
+                    onPressed: () {
+                      setState(() {
+                        starred = !starred;
+                      });
+                    },
+                  ),
+                  duration: Duration(seconds: 1),
+                ),
               ),
             ),
           ],
