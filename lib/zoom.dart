@@ -41,8 +41,6 @@ class _ZoomState extends State<Zoom> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('offset is $_dragOffset');
-
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.black,
@@ -73,19 +71,16 @@ class _ZoomState extends State<Zoom> with SingleTickerProviderStateMixin {
   }
 
   void _onDragStart(DragStartDetails details) {
-    debugPrint('drag start: $details');
     _paneController.stop();
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
-    debugPrint('drag update: $details');
     setState(() {
       _dragOffset += details.primaryDelta;
     });
   }
 
   void _onDragEnd(DragEndDetails details) {
-    debugPrint('drag end: $details');
     _dragFactor = _dragOffset;
     _paneController
         .animateWith(GravitySimulation(0.1, 0, _dragOffset.abs(), 0))
